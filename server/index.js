@@ -6,6 +6,7 @@ const morgan = require('morgan')
 const express = require('express')
 const session = require('express-session');
 const MongoDBStore = require('connect-mongo');
+const path = require('path');
 // const flash = require('connect-flash');
 const passport = require('passport');
 // const LocalStrategy = require('passport-local');
@@ -34,7 +35,12 @@ app.use(morgan('dev'));
 app.use(express.json({limit: '50mb'}))
 app.use(express.urlencoded({extended:true, limit: '50mb'}))
 app.use(cors({credentials:true,origin:"https://fbclone-mernapp.herokuapp.com/"}))
+app.use(express.static(path.join(__dirname, 'build')));
 
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 // SESSION CONFIG
 
 const secret = process.env.SECRET || 'fbsecret'
@@ -88,6 +94,6 @@ app.use('/api', cors({credentials:true,origin:"http://localhost:8000"}), userRou
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, ()=>{
+app.listen(3000, ()=>{
     console.log(`SERVER RUNNING ON PORT ${port}`)
 })
