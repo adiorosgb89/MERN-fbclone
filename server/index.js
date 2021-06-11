@@ -23,34 +23,36 @@ const userRoutes = require('./routes/user-routes')
 const postRoutes = require('./routes/post-routes')
 
 // CONFIGURE DATABASE
-const db = require('./db/index')
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/mern_app';
+const db = require('./db/index');
+//const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/mern_app';
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 db.once('open', () => {
     console.log('Database connected');
 })
 // PARSE BODY
+
+//const baseUrl = process.env.baseURL  || "http://localhost:3000";
 app.use(morgan('dev'));
 app.use(express.json({limit: '50mb'}))
 app.use(express.urlencoded({extended:true, limit: '50mb'}))
-app.use(cors({credentials:true,origin:"https://fbclone-mernapp.herokuapp.com/"}))
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(cors({credentials:true,origin:"http://localhost:8000"}))
+// app.use(express.static(path.join(__dirname, 'build')));
 
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
 // SESSION CONFIG
 
 const secret = process.env.SECRET || 'fbsecret'
 
-const store = MongoDBStore.create({
-    mongoUrl: dbUrl,
-    secret,
-    touchAfter: 24 * 60 * 60
-  })
-store.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// const store = MongoDBStore.create({
+//     mongoUrl: dbUrl,
+//     secret,
+//     touchAfter: 24 * 60 * 60
+//   })
+// store.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const sessionConfig = {
     
@@ -58,7 +60,6 @@ const sessionConfig = {
     secret,
     resave: false,
     saveUninitialized: true,
-    store,
     cookie: {
         httpOnly: true,
         // secure: true,
@@ -88,12 +89,12 @@ passport.deserializeUser(User.deserializeUser());
 // app.options('*', cors())
 
 
-
+// const baseUrl = "https://fbclone-mernapp.herokuapp.com/";
 
 app.use('/api', cors({credentials:true,origin:"http://localhost:8000"}), userRoutes,postRoutes)
 
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
 
 app.listen(3000, ()=>{
-    console.log(`SERVER RUNNING ON PORT ${port}`)
+    console.log(`SERVER RUNNING ON PORT 3000`)
 })

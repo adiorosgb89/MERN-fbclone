@@ -86,7 +86,8 @@ module.exports.updateUser =  async(req, res) => {
 
 module.exports.deleteUser = async (req, res) => {
     try{
-    const currentUser = req.params
+     const currentUser = req.params
+     const user = await User.findById(currentUser.id)
     const posts = await Post.find()
     if(posts){
         for(let post of posts){
@@ -100,8 +101,12 @@ module.exports.deleteUser = async (req, res) => {
             }
         }
     }
+    if(user.profile_pic.public_id){
+        await cloudinary.uploader.destroy(user.profile_pic.public_id)
+    }
      await User.findByIdAndDelete(currentUser.id)
      res.status(200).end()
+
     } catch(err){
         console.error(err)
     }
